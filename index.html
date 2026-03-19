@@ -169,13 +169,18 @@
       margin-bottom: 20px;
     }
 
-    .card .student-name {
-      margin-top: 8px;
-      font-size: 0.68rem;
+    .author-btn {
+      margin-top: auto;
+      background: transparent;
+      border: 1px solid #2a2a2a;
+      border-radius: 30px;
+      padding: 4px 12px;
+      font-size: 0.65rem;
       font-weight: 300;
       color: #555;
-      letter-spacing: 0.04em;
-      flex-shrink: 0;
+      letter-spacing: 0.06em;
+      cursor: default;
+      pointer-events: none;
     }
 
     .card .tag {
@@ -534,6 +539,11 @@
     // ══════════════════════════════════════════════════════
     //  RENDER CARDS
     // ══════════════════════════════════════════════════════
+    for (let i = agents.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [agents[i], agents[j]] = [agents[j], agents[i]];
+    }
+
     const grid = document.getElementById('agentsGrid');
 
     agents.forEach(agent => {
@@ -546,7 +556,10 @@
         </div>
         <h3>${agent.name}</h3>
         <p class="role">${agent.role}</p>
-        ${agent.student ? `<p class="student-name">${agent.student}</p>` : '<p class="student-name" style="visibility:hidden">·</p>'}
+        ${agent.student
+          ? `<button class="author-btn">${agent.student}</button>`
+          : `<button class="author-btn" style="visibility:hidden">·</button>`
+        }
       `;
       card.addEventListener('click', () => startCall(agent, card));
       grid.appendChild(card);
