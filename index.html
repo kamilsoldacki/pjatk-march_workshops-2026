@@ -172,11 +172,12 @@
     }
 
     .card .student-name {
-      margin-top: 10px;
+      margin-top: 8px;
       font-size: 0.68rem;
       font-weight: 300;
       color: #555;
       letter-spacing: 0.04em;
+      flex-shrink: 0;
     }
 
     .card .tag {
@@ -596,7 +597,7 @@
           </svg>
           Talk now
         </button>
-        ${agent.student ? `<p class="student-name">${agent.student}</p>` : ''}
+        ${agent.student ? `<p class="student-name">${agent.student}</p>` : '<p class="student-name" style="visibility:hidden">·</p>'}
       `;
       const handler = e => { e.stopPropagation(); startCall(agent, card); };
       card.querySelector('.btn').addEventListener('click', handler);
