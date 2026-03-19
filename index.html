@@ -116,7 +116,7 @@
       background-size: cover;
       background-position: center;
       filter: grayscale(100%);
-      opacity: 0.15;
+      opacity: 0.07;
       border-radius: var(--radius);
     }
 
@@ -206,114 +206,44 @@
     }
 
 
-    /* ── Modal Overlay ── */
-    .modal-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.78);
-      z-index: 200;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-      backdrop-filter: blur(4px);
-    }
-
-    .modal-overlay.active {
+    /* ── Page content wrapper ── */
+    #pageContent {
       display: flex;
+      flex-direction: column;
+      flex: 1;
+      overflow: hidden;
+      transition: filter 0.7s ease, opacity 0.7s ease;
     }
 
-    .modal {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 24px;
-      width: 100%;
-      max-width: 460px;
-      padding: 36px 32px 32px;
-      position: relative;
-      animation: modalIn 0.25s ease;
-    }
-
-    @keyframes modalIn {
-      from { opacity: 0; transform: translateY(24px) scale(0.97); }
-      to   { opacity: 1; transform: translateY(0) scale(1); }
-    }
-
-    .modal-close {
-      position: absolute;
-      top: 16px;
-      right: 16px;
-      background: transparent;
-      border: 1px solid #333;
-      color: var(--muted);
-      width: 34px;
-      height: 34px;
-      border-radius: 50%;
-      cursor: pointer;
-      font-size: 1rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: border-color 0.2s, color 0.2s;
-    }
-
-    .modal-close:hover {
-      border-color: #ffffff;
-      color: var(--text);
-    }
-
-    .modal-header {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      margin-bottom: 24px;
-    }
-
-    .modal-header img {
-      width: 60px;
-      height: 60px;
-      border-radius: 50%;
-      border: 2px solid var(--accent);
-      object-fit: cover;
-      flex-shrink: 0;
-    }
-
-    .modal-header .info h2 {
-      font-size: 1.1rem;
-      font-weight: 700;
-    }
-
-    .modal-header .info p {
-      font-size: 0.82rem;
-      color: var(--muted);
-      margin-top: 2px;
-    }
-
-    .modal-divider {
-      border: none;
-      border-top: 1px solid var(--border);
-      margin-bottom: 24px;
-    }
-
-    /* ElevenLabs widget container */
-    .widget-container {
-      min-height: 80px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .widget-container elevenlabs-convai {
-      width: 100%;
+    #pageContent.in-call {
+      filter: grayscale(1) brightness(0.18);
+      opacity: 0.7;
+      pointer-events: none;
     }
 
     /* Footer */
     footer {
-      text-align: center;
-      padding: 12px 20px;
-      font-size: 0.78rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 24px;
+      font-size: 0.72rem;
       color: #444;
       flex-shrink: 0;
+    }
+
+    footer .footer-left,
+    footer .footer-right {
+      flex: 1;
+    }
+
+    footer .footer-right {
+      text-align: right;
+    }
+
+    footer .footer-center {
+      text-align: center;
+      flex: 0 0 auto;
     }
 
     footer a {
@@ -322,124 +252,156 @@
       text-underline-offset: 3px;
     }
 
-    /* ── Call bar ── */
-    #callBar {
+    /* ── Call widget ── */
+    #callWidget {
+      display: none;
       position: fixed;
-      bottom: -100px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: #111;
-      border: 1px solid #333;
-      border-radius: 60px;
-      padding: 12px 20px 12px 14px;
-      display: flex;
+      inset: 0;
+      z-index: 400;
       align-items: center;
-      gap: 14px;
-      z-index: 300;
-      box-shadow: 0 8px 40px rgba(0,0,0,0.6);
-      transition: bottom 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
-      white-space: nowrap;
+      justify-content: center;
     }
 
-    #callBar.active { bottom: 28px; }
+    #callWidget.active {
+      display: flex;
+    }
 
-    #callBarAvatar {
-      width: 38px;
-      height: 38px;
+    #callCard {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      animation: cardIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    @keyframes cardIn {
+      from { opacity: 0; transform: scale(0.85) translateY(20px); }
+      to   { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    #callAvatarWrap {
+      position: relative;
+      width: 140px;
+      height: 140px;
+      margin-bottom: 8px;
+    }
+
+    #callWidgetAvatar {
+      width: 140px;
+      height: 140px;
       border-radius: 50%;
-      border: 2px solid #fff;
       object-fit: cover;
-      flex-shrink: 0;
+      border: 2px solid rgba(255,255,255,0.3);
+      display: block;
     }
 
-    #callBarInfo { display: flex; flex-direction: column; line-height: 1.2; }
-
-    #callBarName { font-size: 0.88rem; font-weight: 700; color: #fff; }
-
-    #callBarMode {
-      font-size: 0.72rem;
-      color: var(--muted);
-      min-width: 90px;
-    }
-
-    #callBarMode.speaking { color: #4ade80; }
-
-    .pulse-dot {
-      width: 8px;
-      height: 8px;
+    #callRing {
+      position: absolute;
+      inset: -10px;
       border-radius: 50%;
-      background: #4ade80;
-      animation: pulse 1.2s ease-in-out infinite;
-      flex-shrink: 0;
+      border: 2px solid rgba(255,255,255,0.15);
+      opacity: 0;
+      transition: opacity 0.3s;
     }
 
-    @keyframes pulse {
-      0%, 100% { transform: scale(1); opacity: 1; }
-      50% { transform: scale(1.5); opacity: 0.5; }
+    #callRing.speaking {
+      opacity: 1;
+      animation: ring 1.4s ease-in-out infinite;
+    }
+
+    @keyframes ring {
+      0%, 100% { transform: scale(1); border-color: rgba(74, 222, 128, 0.6); }
+      50% { transform: scale(1.06); border-color: rgba(74, 222, 128, 0.2); }
+    }
+
+    #callWidgetName {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: -0.01em;
+    }
+
+    #callWidgetMode {
+      font-size: 0.85rem;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      min-height: 1.2em;
+    }
+
+    #callWidgetMode.speaking {
+      color: #4ade80;
     }
 
     #endCallBtn {
+      margin-top: 12px;
       background: #e53e3e;
       border: none;
-      border-radius: 50%;
-      width: 40px;
-      height: 40px;
+      border-radius: 40px;
+      padding: 12px 28px;
       cursor: pointer;
       display: flex;
       align-items: center;
-      justify-content: center;
+      gap: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #fff;
+      letter-spacing: 0.04em;
       transition: background 0.2s, transform 0.15s;
+    }
+
+    #endCallBtn:hover { background: #c53030; transform: scale(1.05); }
+
+    #endCallBtn svg {
+      width: 16px;
+      height: 16px;
+      fill: #fff;
       flex-shrink: 0;
     }
 
-    #endCallBtn:hover { background: #c53030; transform: scale(1.08); }
-
-    #endCallBtn svg {
-      width: 18px;
-      height: 18px;
-      fill: #fff;
-    }
-
-    .card.calling {
-      border-color: #4ade80;
-      box-shadow: 0 0 24px rgba(74, 222, 128, 0.2);
-    }
-
     @media (max-width: 480px) {
-      .grid { padding: 12px 16px 80px; gap: 12px; }
+      .grid { padding: 12px 16px 32px; gap: 12px; }
       .card { width: calc(50% - 6px); }
       header { padding: 24px 16px 20px; }
+      #callWidgetAvatar, #callAvatarWrap { width: 110px; height: 110px; }
+      #callWidgetName { font-size: 1.3rem; }
     }
   </style>
 </head>
 <body>
 
-  <!-- ══════════ HEADER ══════════ -->
-  <header>
-    <p class="eyebrow">GAIA 2026 — Interactive Week</p>
-    <h1>TALK TO GAIA — GIVE THE UNIVERSE A VOICE</h1>
-    <p>Choose your signal. Tune into the cosmos. Let GAIA speak through you.</p>
-  </header>
+  <!-- ══════════ PAGE CONTENT (dimmed during call) ══════════ -->
+  <div id="pageContent">
+    <header>
+      <p class="eyebrow">MARCH 16–20 — Interactive Week 2026</p>
+      <h1>TALK TO GAIA - GIVE THE UNIVERSE A VOICE</h1>
+      <p>Choose your signal. Tune into the cosmos. Let GAIA speak through you.</p>
+    </header>
 
-  <!-- ══════════ AGENTS GRID ══════════ -->
-  <main class="grid" id="agentsGrid"></main>
+    <main class="grid" id="agentsGrid"></main>
 
-  <!-- ══════════ CALL BAR ══════════ -->
-  <div id="callBar">
-    <img id="callBarAvatar" src="" alt="" />
-    <span class="pulse-dot"></span>
-    <div id="callBarInfo">
-      <span id="callBarName"></span>
-      <span id="callBarMode">Connecting…</span>
-    </div>
-    <button id="endCallBtn" title="End call">
-      <svg viewBox="0 0 24 24"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z"/></svg>
-    </button>
+    <footer>
+      <span class="footer-left">ASTROPHYSICISTS: Łukasz Wyrzykowski, Milena Ratajczak, Konstancja Satalecka</span>
+      <span class="footer-center">Powered by <a href="https://elevenlabs.io" target="_blank" rel="noopener">ElevenAgents</a></span>
+      <span class="footer-right">Kamil Soldacki</span>
+    </footer>
   </div>
 
-  <footer>
-    Powered by <a href="https://elevenlabs.io" target="_blank" rel="noopener">ElevenAgents</a>
-  </footer>
+  <!-- ══════════ CALL WIDGET ══════════ -->
+  <div id="callWidget">
+    <div id="callCard">
+      <div id="callAvatarWrap">
+        <img id="callWidgetAvatar" src="" alt="" />
+        <div id="callRing"></div>
+      </div>
+      <h2 id="callWidgetName"></h2>
+      <p id="callWidgetMode">Connecting…</p>
+      <button id="endCallBtn" title="End call">
+        <svg viewBox="0 0 24 24"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z"/></svg>
+        End call
+      </button>
+    </div>
+  </div>
 
   <script type="module">
     import { Conversation } from 'https://esm.sh/@11labs/client';
@@ -450,7 +412,7 @@
     const agents = [
       {
         name: "NOSE-IT-ALL",
-        role: "An ancient sentient nose adrift since before the first stars.",
+        role: "An ancient sentient nose adrift since before the first stars",
         student: "Nourhan Gomaa",
         btnLabel: "Inhale the cosmos",
         agentId: "agent_0101kkxfbtk6fcnbyc3jzz3339fv",
@@ -504,30 +466,32 @@
     //  CALL STATE
     // ══════════════════════════════════════════════════════
     let activeConversation = null;
-    let activeCard = null;
 
-    const callBar     = document.getElementById('callBar');
-    const callAvatar  = document.getElementById('callBarAvatar');
-    const callName    = document.getElementById('callBarName');
-    const callMode    = document.getElementById('callBarMode');
-    const endCallBtn  = document.getElementById('endCallBtn');
+    const pageContent     = document.getElementById('pageContent');
+    const callWidget      = document.getElementById('callWidget');
+    const callWidgetAvatar = document.getElementById('callWidgetAvatar');
+    const callWidgetName  = document.getElementById('callWidgetName');
+    const callWidgetMode  = document.getElementById('callWidgetMode');
+    const callRing        = document.getElementById('callRing');
+    const endCallBtn      = document.getElementById('endCallBtn');
 
-    async function startCall(agent, card) {
+    async function startCall(agent) {
       if (activeConversation) await stopCall();
 
-      callAvatar.src      = agent.avatar;
-      callName.textContent = agent.name;
-      callMode.textContent = 'Connecting…';
-      callMode.className   = '';
-      callBar.classList.add('active');
-      activeCard = card;
-      card.classList.add('calling');
+      callWidgetAvatar.src      = agent.avatar;
+      callWidgetName.textContent = agent.name;
+      callWidgetMode.textContent = 'Connecting…';
+      callWidgetMode.className   = '';
+      callRing.className         = '';
+
+      pageContent.classList.add('in-call');
+      callWidget.classList.add('active');
 
       try {
         activeConversation = await Conversation.startSession({
           agentId: agent.agentId,
           onConnect: () => {
-            callMode.textContent = 'Listening…';
+            callWidgetMode.textContent = 'Listening…';
           },
           onDisconnect: () => {
             stopCall();
@@ -538,11 +502,13 @@
           },
           onModeChange: ({ mode }) => {
             if (mode === 'speaking') {
-              callMode.textContent = 'Speaking…';
-              callMode.className = 'speaking';
+              callWidgetMode.textContent = 'Speaking…';
+              callWidgetMode.className = 'speaking';
+              callRing.className = 'speaking';
             } else {
-              callMode.textContent = 'Listening…';
-              callMode.className = '';
+              callWidgetMode.textContent = 'Listening…';
+              callWidgetMode.className = '';
+              callRing.className = '';
             }
           }
         });
@@ -557,8 +523,8 @@
         await activeConversation.endSession();
         activeConversation = null;
       }
-      callBar.classList.remove('active');
-      if (activeCard) { activeCard.classList.remove('calling'); activeCard = null; }
+      pageContent.classList.remove('in-call');
+      callWidget.classList.remove('active');
     }
 
     endCallBtn.addEventListener('click', stopCall);
@@ -589,7 +555,7 @@
           : `<button class="author-btn" style="visibility:hidden">·</button>`
         }
       `;
-      card.addEventListener('click', () => startCall(agent, card));
+      card.addEventListener('click', () => startCall(agent));
       grid.appendChild(card);
     });
   </script>
