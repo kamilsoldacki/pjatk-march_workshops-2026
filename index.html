@@ -24,19 +24,24 @@
       --radius: 20px;
     }
 
-    html { scroll-behavior: smooth; }
+    html, body {
+      height: 100%;
+      overflow: hidden;
+    }
 
     body {
       font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
       background: var(--bg);
       color: var(--text);
-      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
     }
 
     /* ── Header ── */
     header {
       text-align: center;
-      padding: 72px 24px 48px;
+      padding: 40px 24px 28px;
+      flex-shrink: 0;
       position: relative;
     }
 
@@ -46,7 +51,7 @@
       width: 60px;
       height: 1px;
       background: #ffffff;
-      margin: 28px auto 0;
+      margin: 18px auto 0;
     }
 
     header .eyebrow {
@@ -78,19 +83,26 @@
     /* ── Grid ── */
     .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
-      gap: 24px;
+      grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+      gap: 16px;
       max-width: 1080px;
+      width: 100%;
       margin: 0 auto;
-      padding: 16px 28px 100px;
+      padding: 16px 28px 80px;
+      flex: 1;
+      overflow-y: auto;
+      scrollbar-width: none;
+      align-content: start;
     }
+
+    .grid::-webkit-scrollbar { display: none; }
 
     /* ── Card ── */
     .card {
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: var(--radius);
-      padding: 36px 20px 28px;
+      padding: 24px 16px 20px;
       text-align: center;
       cursor: pointer;
       transition: transform 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease, background 0.22s ease;
@@ -153,6 +165,14 @@
       font-size: 0.8rem;
       color: var(--muted);
       margin-bottom: 20px;
+    }
+
+    .card .student-name {
+      margin-top: 10px;
+      font-size: 0.68rem;
+      font-weight: 300;
+      color: #555;
+      letter-spacing: 0.04em;
     }
 
     .card .tag {
@@ -302,10 +322,11 @@
     /* Footer */
     footer {
       text-align: center;
-      padding: 20px;
+      padding: 12px 20px;
       font-size: 0.78rem;
       color: var(--muted);
       border-top: 1px solid var(--border);
+      flex-shrink: 0;
     }
 
     footer a {
@@ -397,10 +418,9 @@
       box-shadow: 0 0 24px rgba(74, 222, 128, 0.2);
     }
 
-    /* Responsive */
     @media (max-width: 480px) {
-      .grid { padding: 12px 16px 100px; gap: 16px; }
-      header { padding: 48px 16px 36px; }
+      .grid { padding: 12px 16px 80px; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
+      header { padding: 24px 16px 20px; }
     }
   </style>
 </head>
@@ -441,10 +461,11 @@
     // ══════════════════════════════════════════════════════
     const agents = [
       {
-        name: "Alex Morgan",
-        role: "Career Coach",
-        agentId: "AGENT_ID_1",
-        avatar: "https://api.dicebear.com/8.x/avataaars/svg?seed=Alex&backgroundColor=b6e3f4"
+        name: "NOSE-IT-ALL",
+        role: "Pre-stellar cosmic nose",
+        student: "Nourhan Gomaa",
+        agentId: "agent_0101kkxfbtk6fcnbyc3jzz3339fv",
+        avatar: "avatars/nose-it-all.webp"
       },
       {
         name: "Sophie Chen",
@@ -571,6 +592,7 @@
           </svg>
           Talk now
         </button>
+        ${agent.student ? `<p class="student-name">${agent.student}</p>` : ''}
       `;
       const handler = e => { e.stopPropagation(); startCall(agent, card); };
       card.querySelector('.btn').addEventListener('click', handler);
