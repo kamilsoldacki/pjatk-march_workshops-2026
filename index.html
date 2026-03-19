@@ -31,9 +31,20 @@
       overflow: hidden;
     }
 
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: url('background.webp') center center / cover no-repeat;
+      opacity: 0.04;
+      pointer-events: none;
+      z-index: 0;
+    }
+
     body {
       font-family: 'DM Sans', system-ui, sans-serif;
       background: var(--bg);
+      position: relative;
       color: var(--text);
       display: flex;
       flex-direction: column;
@@ -285,7 +296,7 @@
       content: '';
       position: absolute;
       inset: 0;
-      background: url('title.png') center center / contain no-repeat;
+      background: url('title.webp') center center / contain no-repeat;
       opacity: 0.07;
       pointer-events: none;
     }
@@ -388,6 +399,20 @@
       flex-shrink: 0;
     }
 
+    /* ── Medium screens (narrowed browser or tablet) ── */
+    @media (max-width: 900px) {
+      html, body { overflow: auto; height: auto; }
+      #pageContent { overflow: visible; flex: none; }
+      .grid {
+        overflow-y: visible;
+        flex: none;
+        grid-template-columns: repeat(4, 1fr);
+        padding: 16px 20px 40px;
+      }
+      .card { grid-column: span 1; }
+    }
+
+    /* ── Mobile ── */
     @media (max-width: 600px) {
       #siteLogo {
         position: fixed;
@@ -397,11 +422,7 @@
         transform: translateX(-50%);
         height: 26px;
       }
-    }
-
-    @media (max-width: 480px) {
-      .grid { padding: 12px 16px 32px; gap: 10px; grid-template-columns: repeat(2, 1fr); }
-      .card { grid-column: span 1; }
+      .grid { grid-template-columns: repeat(2, 1fr); gap: 10px; padding: 12px 16px 32px; }
       header { padding: 56px 16px 16px; }
       .subtitle-full { display: none; }
       .subtitle-short { display: inline; }
@@ -415,7 +436,7 @@
 <body>
 
   <!-- ══════════ LOGO ══════════ -->
-  <img id="siteLogo" src="logo.jpg" alt="SNM PJATK" />
+  <img id="siteLogo" src="logo.webp" alt="SNM PJATK" />
 
   <!-- ══════════ PAGE CONTENT (dimmed during call) ══════════ -->
   <div id="pageContent">
@@ -491,7 +512,7 @@
         role: "Friendly, energetic galactic space enthusiast",
         student: "Zuzanna Gocławska<br>Natalia Ślusarska",
         agentId: "agent_3501km2ynf1vepw9t8q6ky8gq4jr",
-        avatar: "avatars/zuna.jpg"
+        avatar: "avatars/zuna.webp"
       },
       {
         name: "Monika",
@@ -512,7 +533,7 @@
         role: "A calm, magnetic cosmic guide shaped by solitude among the stars",
         student: "Aleksandra Ciesielska",
         agentId: "agent_8901kkxfefz3f579y016xvcrv243",
-        avatar: "avatars/soren.jpg"
+        avatar: "avatars/soren.webp"
       }
     ];
 
