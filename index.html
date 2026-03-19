@@ -75,6 +75,8 @@
       margin-right: auto;
     }
 
+    .subtitle-short { display: none; }
+
     /* ── Grid ── */
     .grid {
       display: grid;
@@ -386,13 +388,24 @@
       flex-shrink: 0;
     }
 
+    @media (max-width: 600px) {
+      #siteLogo {
+        position: fixed;
+        top: 12px;
+        right: auto;
+        left: 50%;
+        transform: translateX(-50%);
+        height: 26px;
+      }
+    }
+
     @media (max-width: 480px) {
       .grid { padding: 12px 16px 32px; gap: 10px; grid-template-columns: repeat(2, 1fr); }
       .card { grid-column: span 1; }
-      header { padding: 24px 16px 20px; }
-      header p:not(.eyebrow) { display: none; }
+      header { padding: 56px 16px 16px; }
+      .subtitle-full { display: none; }
+      .subtitle-short { display: inline; }
       footer { display: none; }
-      .card .role { display: none; }
       .card .author-btn { display: none; }
       #callWidgetAvatar, #callAvatarWrap { width: 110px; height: 110px; }
       #callWidgetName { font-size: 1.3rem; }
@@ -409,7 +422,7 @@
     <header>
       <p class="eyebrow">MARCH 16–20 — Interactive Week 2026</p>
       <h1>TALK TO GAIA - GIVE THE UNIVERSE A VOICE</h1>
-      <p>Choose your signal. Tune into the cosmos. Let GAIA speak through you.</p>
+      <p><span class="subtitle-full">Choose your signal. Tune into the cosmos. Let GAIA speak through you.</span><span class="subtitle-short">Choose your signal:</span></p>
     </header>
 
     <main class="grid" id="agentsGrid"></main>
