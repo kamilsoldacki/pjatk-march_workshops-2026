@@ -35,8 +35,8 @@
       content: '';
       position: fixed;
       inset: 0;
-      background: url('background.webp') center center / cover no-repeat;
-      opacity: 0.04;
+      background: url('background.webp') bottom center / cover no-repeat;
+      opacity: 0.6;
       pointer-events: none;
       z-index: 0;
     }
@@ -60,6 +60,8 @@
 
 
     header .eyebrow {
+      display: flex;
+      justify-content: space-between;
       font-size: 0.78rem;
       font-weight: 600;
       letter-spacing: 0.22em;
@@ -440,7 +442,7 @@
   <!-- ══════════ PAGE CONTENT (dimmed during call) ══════════ -->
   <div id="pageContent">
     <header>
-      <p class="eyebrow">MARCH 16–20 — Interactive Week 2026</p>
+      <p class="eyebrow"><span>MARCH 16–20</span><span>Interactive Week 2026</span></p>
       <h1>TALK TO GAIA - GIVE THE UNIVERSE A VOICE</h1>
       <p><span class="subtitle-full">Choose your signal. Tune into the cosmos. Let GAIA speak through you.</span><span class="subtitle-short">Choose your signal:</span></p>
     </header>
