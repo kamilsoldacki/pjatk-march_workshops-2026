@@ -334,25 +334,6 @@
   <!-- ══════════ AGENTS GRID ══════════ -->
   <main class="grid" id="agentsGrid"></main>
 
-  <!-- ══════════ MODAL ══════════ -->
-  <div class="modal-overlay" id="modalOverlay">
-    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalAgentName">
-      <button class="modal-close" id="modalClose" aria-label="Close">✕</button>
-      <div class="modal-header">
-        <img id="modalAvatar" src="" alt="" />
-        <div class="info">
-          <h2 id="modalAgentName"></h2>
-          <p id="modalAgentRole"></p>
-        </div>
-      </div>
-      <hr class="modal-divider" />
-      <div class="widget-container" id="widgetContainer"></div>
-    </div>
-  </div>
-
-  <!-- ElevenLabs Conversational AI Widget -->
-  <script src="https://elevenlabs.io/convai-widget/index.js" async></script>
-
   <footer>
     Powered by <a href="https://elevenlabs.io" target="_blank" rel="noopener">ElevenAgents</a>
   </footer>
@@ -439,45 +420,14 @@
           Talk now
         </button>
       `;
-      card.addEventListener('click', () => openModal(agent));
+      card.querySelector('.btn').addEventListener('click', e => {
+        e.stopPropagation();
+        window.open(`https://elevenlabs.io/app/talk-to?agent_id=${agent.agentId}`, '_blank');
+      });
+      card.addEventListener('click', () => {
+        window.open(`https://elevenlabs.io/app/talk-to?agent_id=${agent.agentId}`, '_blank');
+      });
       grid.appendChild(card);
-    });
-
-    // ══════════════════════════════════════════════════════
-    //  MODAL LOGIC
-    // ══════════════════════════════════════════════════════
-    const overlay    = document.getElementById('modalOverlay');
-    const closeBtn   = document.getElementById('modalClose');
-    const modalName  = document.getElementById('modalAgentName');
-    const modalRole  = document.getElementById('modalAgentRole');
-    const modalImg   = document.getElementById('modalAvatar');
-    const widgetBox  = document.getElementById('widgetContainer');
-
-    function openModal(agent) {
-      modalName.textContent = agent.name;
-      modalRole.textContent = agent.role;
-      modalImg.src          = agent.avatar;
-      modalImg.alt          = agent.name;
-
-      // inject fresh widget each time
-      widgetBox.innerHTML = `<elevenlabs-convai agent-id="${agent.agentId}"></elevenlabs-convai>`;
-
-      overlay.classList.add('active');
-      document.body.style.overflow = 'hidden';
-    }
-
-    function closeModal() {
-      overlay.classList.remove('active');
-      document.body.style.overflow = '';
-      widgetBox.innerHTML = ''; // stop the session
-    }
-
-    closeBtn.addEventListener('click', closeModal);
-    overlay.addEventListener('click', e => {
-      if (e.target === overlay) closeModal();
-    });
-    document.addEventListener('keydown', e => {
-      if (e.key === 'Escape') closeModal();
     });
   </script>
 
