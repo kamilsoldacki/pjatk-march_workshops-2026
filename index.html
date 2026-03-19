@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GAIA 2026 — AI Agents</title>
+  <style>
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg: #000000;
+      --surface: #0e0e0e;
+      --surface-hover: #1a1a1a;
+      --border: #2a2a2a;
+      --border-hover: #ffffff;
+      --accent: #ffffff;
+      --accent2: #aaaaaa;
+      --text: #ffffff;
+      --muted: #888888;
+      --radius: 20px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* ── Header ── */
+    header {
+      text-align: center;
+      padding: 72px 24px 48px;
+      position: relative;
+    }
+
+    header::after {
+      content: '';
+      display: block;
+      width: 60px;
+      height: 1px;
+      background: #ffffff;
+      margin: 28px auto 0;
+    }
+
+    header .eyebrow {
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 14px;
+    }
+
+    header h1 {
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      font-weight: 800;
+      color: #ffffff;
+      line-height: 1.15;
+      letter-spacing: -0.01em;
+    }
+
+    header p {
+      margin-top: 14px;
+      color: var(--muted);
+      font-size: 1.05rem;
+      max-width: 520px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    /* ── Grid ── */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+      gap: 24px;
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 16px 28px 100px;
+    }
+
+    /* ── Card ── */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 36px 20px 28px;
+      text-align: center;
+      cursor: pointer;
+      transition: transform 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease, background 0.22s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 50% 0%, rgba(255,255,255,0.04) 0%, transparent 70%);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .card:hover {
+      transform: translateY(-8px);
+      border-color: var(--border-hover);
+      box-shadow: 0 16px 48px rgba(255, 255, 255, 0.07);
+      background: var(--surface-hover);
+    }
+
+    .card:hover::before { opacity: 1; }
+
+    .avatar-wrap {
+      position: relative;
+      display: inline-block;
+      margin-bottom: 18px;
+    }
+
+    .avatar-wrap img {
+      width: 96px;
+      height: 96px;
+      border-radius: 50%;
+      border: 3px solid var(--accent);
+      object-fit: cover;
+      display: block;
+      background: #1e1e2e;
+    }
+
+    .status-dot {
+      position: absolute;
+      bottom: 4px;
+      right: 4px;
+      width: 12px;
+      height: 12px;
+      background: #ffffff;
+      border-radius: 50%;
+      border: 2px solid var(--surface);
+    }
+
+    .card h3 {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 5px;
+    }
+
+    .card .role {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-bottom: 20px;
+    }
+
+    .card .tag {
+      display: inline-block;
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      border: 1px solid #333;
+      border-radius: 30px;
+      padding: 3px 10px;
+      margin-bottom: 18px;
+    }
+
+    .card .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: #ffffff;
+      color: #000000;
+      border: none;
+      border-radius: 30px;
+      padding: 10px 24px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.15s;
+    }
+
+    .card .btn:hover {
+      opacity: 0.85;
+      transform: scale(1.03);
+    }
+
+    .btn-icon {
+      width: 16px;
+      height: 16px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    /* ── Modal Overlay ── */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.78);
+      z-index: 200;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      backdrop-filter: blur(4px);
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      width: 100%;
+      max-width: 460px;
+      padding: 36px 32px 32px;
+      position: relative;
+      animation: modalIn 0.25s ease;
+    }
+
+    @keyframes modalIn {
+      from { opacity: 0; transform: translateY(24px) scale(0.97); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      background: transparent;
+      border: 1px solid #333;
+      color: var(--muted);
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: border-color 0.2s, color 0.2s;
+    }
+
+    .modal-close:hover {
+      border-color: #ffffff;
+      color: var(--text);
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .modal-header img {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      border: 2px solid var(--accent);
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+
+    .modal-header .info h2 {
+      font-size: 1.1rem;
+      font-weight: 700;
+    }
+
+    .modal-header .info p {
+      font-size: 0.82rem;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .modal-divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin-bottom: 24px;
+    }
+
+    /* ElevenLabs widget container */
+    .widget-container {
+      min-height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .widget-container elevenlabs-convai {
+      width: 100%;
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 20px;
+      font-size: 0.78rem;
+      color: var(--muted);
+      border-top: 1px solid var(--border);
+    }
+
+    footer a {
+      color: #ffffff;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    /* Responsive */
+    @media (max-width: 480px) {
+      .grid { padding: 12px 16px 80px; gap: 16px; }
+      header { padding: 48px 16px 36px; }
+      .modal { padding: 28px 20px 24px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ══════════ HEADER ══════════ -->
+  <header>
+    <p class="eyebrow">GAIA 2026 — Interactive Week</p>
+    <h1>Meet Our AI Agents</h1>
+    <p>Click on any avatar to start a real-time voice conversation with a student-built AI agent.</p>
+  </header>
+
+  <!-- ══════════ AGENTS GRID ══════════ -->
+  <main class="grid" id="agentsGrid"></main>
+
+  <!-- ══════════ MODAL ══════════ -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalAgentName">
+      <button class="modal-close" id="modalClose" aria-label="Close">✕</button>
+      <div class="modal-header">
+        <img id="modalAvatar" src="" alt="" />
+        <div class="info">
+          <h2 id="modalAgentName"></h2>
+          <p id="modalAgentRole"></p>
+        </div>
+      </div>
+      <hr class="modal-divider" />
+      <div class="widget-container" id="widgetContainer"></div>
+    </div>
+  </div>
+
+  <!-- ElevenLabs Conversational AI Widget -->
+  <script src="https://elevenlabs.io/convai-widget/index.js" async></script>
+
+  <footer>
+    Powered by <a href="https://elevenlabs.io" target="_blank" rel="noopener">ElevenLabs Conversational AI</a>
+  </footer>
+
+  <script>
+    // ══════════════════════════════════════════════════════
+    //  AGENTS DATA — replace agentId and avatar for each student
+    // ══════════════════════════════════════════════════════
+    const agents = [
+      {
+        name: "Alex Morgan",
+        role: "Career Coach",
+        tag: "Coaching",
+        agentId: "AGENT_ID_1",
+        avatar: "https://api.dicebear.com/8.x/avataaars/svg?seed=Alex&backgroundColor=b6e3f4"
+      },
+      {
+        name: "Sophie Chen",
+        role: "HR Assistant",
+        tag: "Recruitment",
+        agentId: "AGENT_ID_2",
+        avatar: "https://api.dicebear.com/8.x/avataaars/svg?seed=Sophie&backgroundColor=d1f4e0"
+      },
+      {
+        name: "Marco Rossi",
+        role: "Medical Advisor",
+        tag: "Healthcare",
+        agentId: "AGENT_ID_3",
+        avatar: "https://api.dicebear.com/8.x/avataaars/svg?seed=Marco&backgroundColor=ffd5dc"
+      },
+      {
+        name: "Lena Schmidt",
+        role: "Legal Assistant",
+        tag: "Law",
+        agentId: "AGENT_ID_4",
+        avatar: "https://api.dicebear.com/8.x/avataaars/svg?seed=Lena&backgroundColor=c0aede"
+      },
+      {
+        name: "James Okafor",
+        role: "Financial Advisor",
+        tag: "Finance",
+        agentId: "AGENT_ID_5",
+        avatar: "https://api.dicebear.com/8.x/avataaars/svg?seed=James&backgroundColor=ffdfbf"
+      },
+      {
+        name: "Nina Patel",
+        role: "Mental Health Support",
+        tag: "Wellness",
+        agentId: "AGENT_ID_6",
+        avatar: "https://api.dicebear.com/8.x/avataaars/svg?seed=Nina&backgroundColor=b6e3f4"
+      }
+    ];
+
+    // ══════════════════════════════════════════════════════
+    //  RENDER CARDS
+    // ══════════════════════════════════════════════════════
+    const grid = document.getElementById('agentsGrid');
+
+    agents.forEach((agent, i) => {
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.innerHTML = `
+        <div class="avatar-wrap">
+          <img src="${agent.avatar}" alt="${agent.name}" />
+          <span class="status-dot" title="Online"></span>
+        </div>
+        <h3>${agent.name}</h3>
+        <p class="role">${agent.role}</p>
+        <span class="tag">${agent.tag}</span><br/>
+        <button class="btn">
+          <svg class="btn-icon" viewBox="0 0 24 24">
+            <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
+            <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+            <line x1="12" y1="19" x2="12" y2="23"/>
+            <line x1="8" y1="23" x2="16" y2="23"/>
+          </svg>
+          Talk now
+        </button>
+      `;
+      card.addEventListener('click', () => openModal(agent));
+      grid.appendChild(card);
+    });
+
+    // ══════════════════════════════════════════════════════
+    //  MODAL LOGIC
+    // ══════════════════════════════════════════════════════
+    const overlay    = document.getElementById('modalOverlay');
+    const closeBtn   = document.getElementById('modalClose');
+    const modalName  = document.getElementById('modalAgentName');
+    const modalRole  = document.getElementById('modalAgentRole');
+    const modalImg   = document.getElementById('modalAvatar');
+    const widgetBox  = document.getElementById('widgetContainer');
+
+    function openModal(agent) {
+      modalName.textContent = agent.name;
+      modalRole.textContent = agent.role;
+      modalImg.src          = agent.avatar;
+      modalImg.alt          = agent.name;
+
+      // inject fresh widget each time
+      widgetBox.innerHTML = `<elevenlabs-convai agent-id="${agent.agentId}"></elevenlabs-convai>`;
+
+      overlay.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+      overlay.classList.remove('active');
+      document.body.style.overflow = '';
+      widgetBox.innerHTML = ''; // stop the session
+    }
+
+    closeBtn.addEventListener('click', closeModal);
+    overlay.addEventListener('click', e => {
+      if (e.target === overlay) closeModal();
+    });
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') closeModal();
+    });
+  </script>
+
+</body>
+</html>
