@@ -83,7 +83,7 @@
     /* ── Grid ── */
     .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+      grid-template-columns: repeat(3, 1fr);
       gap: 16px;
       max-width: 1080px;
       width: 100%;
@@ -398,7 +398,7 @@
     }
 
     @media (max-width: 480px) {
-      .grid { padding: 12px 16px 80px; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
+      .grid { padding: 12px 16px 80px; gap: 12px; grid-template-columns: repeat(2, 1fr); }
       header { padding: 24px 16px 20px; }
     }
   </style>
@@ -469,10 +469,11 @@
         avatar: "avatars/cosmo.webp"
       },
       {
-        name: "James Okafor",
-        role: "Financial Advisor",
-        agentId: "AGENT_ID_5",
-        avatar: "https://api.dicebear.com/8.x/avataaars/svg?seed=James&backgroundColor=ffdfbf"
+        name: "Zuna",
+        role: "Friendly, energetic galactic space enthusiast",
+        student: "Zuzanna Gocławska<br>Natalia Ślusarska",
+        agentId: "agent_3501km2ynf1vepw9t8q6ky8gq4jr",
+        avatar: "avatars/zuna.jpg"
       },
       {
         name: "Agent",
