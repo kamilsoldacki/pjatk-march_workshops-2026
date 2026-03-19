@@ -45,14 +45,6 @@
       position: relative;
     }
 
-    header::after {
-      content: '';
-      display: block;
-      width: 60px;
-      height: 1px;
-      background: #ffffff;
-      margin: 18px auto 0;
-    }
 
     header .eyebrow {
       font-size: 0.78rem;
@@ -113,15 +105,29 @@
       align-items: center;
       width: 220px;
       flex-shrink: 0;
+      overflow: hidden;
     }
 
     .card::before {
       content: '';
       position: absolute;
       inset: 0;
+      background-image: var(--avatar-url);
+      background-size: cover;
+      background-position: center;
+      filter: grayscale(100%);
+      opacity: 0.15;
+      border-radius: var(--radius);
+    }
+
+    .card::after {
+      content: '';
+      position: absolute;
+      inset: 0;
       background: radial-gradient(circle at 50% 0%, rgba(255,255,255,0.04) 0%, transparent 70%);
       opacity: 0;
       transition: opacity 0.3s;
+      border-radius: var(--radius);
     }
 
     .card:hover {
@@ -131,7 +137,7 @@
       background: var(--surface-hover);
     }
 
-    .card:hover::before { opacity: 1; }
+    .card:hover::after { opacity: 1; }
 
     .avatar-wrap {
       position: relative;
@@ -306,13 +312,12 @@
       text-align: center;
       padding: 12px 20px;
       font-size: 0.78rem;
-      color: var(--muted);
-      border-top: 1px solid var(--border);
+      color: #444;
       flex-shrink: 0;
     }
 
     footer a {
-      color: #ffffff;
+      color: #555;
       text-decoration: underline;
       text-underline-offset: 3px;
     }
@@ -488,7 +493,7 @@
       },
       {
         name: "GAIA",
-        role: "An ancient, all-knowing grandmotherly star-constellation, mystique being, soft, warm, and infinitely gentle, guiding you into the unknowns of space knowledge.",
+        role: "An all-knowing celestial grandmother guiding you into the unknown",
         student: "Agnieszka Wacławik",
         agentId: "agent_3301km19jhrrftkamd3r0fjem55s",
         avatar: "avatars/gaia.webp"
@@ -571,6 +576,7 @@
     agents.forEach(agent => {
       const card = document.createElement('div');
       card.className = 'card';
+      card.style.setProperty('--avatar-url', `url(${agent.avatar})`);
       card.innerHTML = `
         <div class="avatar-wrap">
           <img src="${agent.avatar}" alt="${agent.name}" />
